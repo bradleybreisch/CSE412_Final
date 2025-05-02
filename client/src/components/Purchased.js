@@ -62,6 +62,7 @@ const Purchased = () => {
 
     return (
         <div>
+            <h1>Your Purchases:</h1>
             {purchasedBooks.map((book) => (
                 <BookDisplay key={book.isbn} isbn={book.isbn} title={book.title} author={book.author} publication_year={book.publication_year} img_link={book.img_link}></BookDisplay>
             ))}
