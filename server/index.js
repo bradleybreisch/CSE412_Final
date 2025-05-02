@@ -216,6 +216,28 @@ app.get("/getAllListings", async(req, res) =>{
     }
 });
 
+//update a listing
+app.post("/updateListing", async(req, res) =>{
+    const {isbn, retailerId, newCost, newAvailability} = req.body;
+    try {
+        const result = await pool.query("UPDATE listing SET cost = $1, available = $2 WHERE retailerID = $3 AND isbn = $4", [newCost, newAvailability, retailerId, isbn]);
+
+        if(result.rowCount > 0) 
+        {
+            res.status(200).json({message: "Successful Edit!"});
+            console.log("succesfull updated")
+        }
+        else
+        {
+            console.log("unsuccessful edit")
+            res.status(400).json({message: "Error, Unsuccesful edit, check values passed"});
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 
 
 

@@ -22,9 +22,10 @@ const Login = () => {
 
             //retreive response
             const loginResult = await response.json();
+            console.log(loginResult);
 
             //Check if uid was found
-            if(response.ok && loginResult.uid)
+            if(response.ok && loginResult.uid >= 0)
             {
                 console.log("User found, uid:", loginResult.uid);
                 sessionStorage.setItem("uid", loginResult.uid)
@@ -53,7 +54,7 @@ const Login = () => {
         setPassword("");
     }
 
-    if(sessionUid && sessionUsername)
+    if(sessionUid >= 0 && sessionUsername)
     {
         return(
             <>
