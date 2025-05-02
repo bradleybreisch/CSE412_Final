@@ -103,6 +103,30 @@ app.post("/getFavorited", async(req, res) =>{
     }
 });
 
+// Add a book to favorites
+app.post("/favoriteBook", async (req, res) => {
+    const { uid, isbn } = req.body;
+    try {
+        const result = await pool.query("INSERT INTO favorite (uid, isbn) VALUES ($1, $2) ON CONFLICT DO NOTHING", [uid, isbn]);
+        res.status(200).json({ message: "Book favorited" });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+// Remove a book from favorites
+app.delete("/unfavoriteBook", async (req, res) => {
+    const { uid, isbn } = req.body;
+    try {
+        const result = await pool.query("DELETE FROM favorite WHERE uid = $1 AND isbn = $2", [uid, isbn]);
+        res.status(200).json({ message: "Book unfavorited" });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 //Querys on purchase
 
 app.post("/getPurchased", async(req, res) =>{
@@ -126,6 +150,32 @@ app.post("/getPurchased", async(req, res) =>{
 });
 
 //Querys on listing
+
+//returned listings based on a provided query
+app.post("/getSearchedListings", async(req, res) =>{
+    const {query} = req.body;
+    try {
+        const result = await pool.query("SELECT book.*, listing.cost, listing.available, retailer.name, retailer.link FROM book NATURAL JOIN listing NATURAL JOIN retailer WHERE title LIKE $1;", [`%${query}%`]);
+
+        if(result.rows.length > 0) 
+        {
+            res.status(200).json({result});
+            console.log("books found")
+        }
+        else
+        {
+            console.log("no books found")
+            res.status(400).json({message: "Listing Search resulted in no books"});
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+//return all listings
+
+
 
 app.listen(8080, '0.0.0.0', () => {
     console.log("Express server has started, port = 8080")
