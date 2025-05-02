@@ -82,6 +82,28 @@ app.post("/getSearched", async(req, res) =>{
 
 //Querys on favorite
 
+app.post("/searchFavorited", async(req, res) =>{
+    const {uid, query} = req.body;
+    try {
+        console.log("starting search for favorited");
+        const result = await pool.query("SELECT book.* FROM favorite NATURAL JOIN book WHERE uid = $1 AND title LIKE $2;", [uid, `%${query}%`]);
+        console.log("end search for favorited");
+        if(result.rows.length > 0) 
+        {
+            res.status(200).json({result});
+            console.log("favorites found")
+        }
+        else
+        {
+            console.log("no favorites found")
+            res.status(400).json({message: "User Has no Favorited Books"});
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 app.post("/getFavorited", async(req, res) =>{
     const {uid} = req.body;
     try {
@@ -174,6 +196,26 @@ app.post("/getSearchedListings", async(req, res) =>{
 });
 
 //return all listings
+app.get("/getAllListings", async(req, res) =>{
+    try {
+        const result = await pool.query("SELECT book.*, listing.cost, listing.available, retailer.name, retailer.link FROM book NATURAL JOIN listing NATURAL JOIN retailer;");
+
+        if(result.rows.length > 0) 
+        {
+            res.status(200).json({result});
+            console.log("books found")
+        }
+        else
+        {
+            console.log("no books found")
+            res.status(400).json({message: "Listing resulted in no books"});
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 
 
 
