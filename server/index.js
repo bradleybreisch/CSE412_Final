@@ -86,7 +86,7 @@ app.post("/searchFavorited", async(req, res) =>{
     const {uid, query} = req.body;
     try {
         console.log("starting search for favorited");
-        const result = await pool.query("SELECT book.* FROM favorite NATURAL JOIN book WHERE uid = $1 AND title LIKE $2;", [uid, `%${query}%`]);
+        const result = await pool.query("SELECT book.* FROM favorite NATURAL JOIN book WHERE uid = $1 AND title LIKE $2;", [uid, `%${query.toUpperCase()}%`]);
         console.log("end search for favorited");
         if(result.rows.length > 0) 
         {

@@ -49,6 +49,8 @@ const Login = () => {
         sessionStorage.removeItem("username");
         setSessionUid("");
         setSessionUsername("");
+        setUsername("");
+        setPassword("");
     }
 
     if(sessionUid && sessionUsername)
