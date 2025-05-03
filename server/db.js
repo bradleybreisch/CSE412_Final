@@ -1,10 +1,11 @@
-const { Pool } = require("pg");
-
-const poop = require("pg").Pool;
+const Pool = require("pg").Pool;
 
 const pool = new Pool({
-    user: "TEMPuser",
-    password: "TEMPpassword",
-    host: "TEMPhost",
-    port: "TEMPport"
+    user: "brad",
+    password: "brad",
+    host: "127.0.0.1",
+    port: "8888",
+    database: "book"
 })
+
+module.exports = pool;
